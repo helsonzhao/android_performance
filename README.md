@@ -1,7 +1,13 @@
 # The Art of Android Performance Optimization — Companion Source Code
 
-**Author:** Zijian Zhao  
+**Author:** Zijian Zhao — *Google Developer Expert (GDE) for Android | Former Performance Architect at TikTok, Alibaba & Tencent*  
 **Technical Blog:** [https://blog.helson.uk/tags/androidperformance](https://blog.helson.uk/tags/androidperformance)
+
+---
+
+## About the Author
+
+**Zijian Zhao** is a **Google Developer Expert (GDE) for Android** with deep expertise in mobile systems architecture, Linux/ART internals, and large-scale performance engineering. He has held senior engineering and performance architecture roles at top global technology companies including **TikTok (ByteDance)**, **Alibaba**, and **Tencent**, where he spearheaded memory governance, startup & UI fluency, stability, and binary-size optimization for flagship applications serving over a billion users worldwide, including **TikTok** and **Lark**.
 
 ---
 
@@ -31,7 +37,7 @@ This repository contains the official companion Android project for the book ***
   * **Section 5.2 — Reducing CPU Wait States:** Zero-copy `MappedByteBuffer` (`mmap`) file I/O in `SpeedExampleActivity.java`.
   * **Section 5.3 — Binding Critical Threads to Big CPU Cores:** `optimize.cpp` (`discoverBigCores()` reading `/sys/devices/system/cpu/cpuX/cpufreq/cpuinfo_max_freq` and binding threads via `sched_setaffinity()`).
   * **Section 5.4 — ART Garbage Collection (GC) Suppression:** `optimize.cpp` (`enableGcSuppressionWindow()` hooking `art::gc::HeapTaskDaemon::Run`).
-  * **Section 5.5 — Cache Eviction Strategy Optimization:** `LFUCache.java` (Strict $O(1)$ Least Frequently Used cache backed by doubly-linked frequency buckets).
+  * **Section 5.5 — Cache Eviction Strategy Optimization:** `LFUCache.java` (Strict *O*(1) Least Frequently Used cache backed by doubly-linked frequency buckets).
   * **Section 5.7 — Elevating Core Thread Priorities:** `SpeedExampleActivity.java` (`findRenderThreadTid()` via `/proc/self/task` and `Process.setThreadPriority(tid, -19)`).
   * **Section 5.8 — Unified Thread Pool Governance:** `MonitoredThreadPool.java` (Separated CPU-bound and I/O-bound bounded `ThreadPoolExecutor`s with slow-task watchdog instrumentation).
 
