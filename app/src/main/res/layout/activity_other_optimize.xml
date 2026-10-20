@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.performance_optimize.other.OtherOptimizeActivity">
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_gravity="center"
+        android:orientation="vertical">
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/power_profile_check"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:text="10.1 PowerProfile Inspection"/>
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/traffic_stats_check"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:text="10.2 Network Traffic Telemetry"/>
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/disk_space_scan"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:text="10.3 Sandbox Disk Usage Scan"/>
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/degradation_eval"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:text="10.4 Graceful Degradation"/>
+    </androidx.appcompat.widget.LinearLayoutCompat>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

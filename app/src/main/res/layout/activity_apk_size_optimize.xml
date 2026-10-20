@@ -1,9 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".memory.JavaLeakActivity">
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+    tools:context="com.example.performance_optimize.apksize.ApkSizeOptimizeActivity">
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_gravity="center"
+        android:orientation="vertical">
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/scan_duplicate_res"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:text="9.1 Scan Duplicate APK Files"/>
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/dynamic_res_load"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:text="9.6 Dynamic Resource Load"/>
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/dynamic_dex_load"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:text="9.7 Dynamic DEX Class Load"/>
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/dynamic_so_inject"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:text="9.8 Dynamic .so Dir Inject"/>
+    </androidx.appcompat.widget.LinearLayoutCompat>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

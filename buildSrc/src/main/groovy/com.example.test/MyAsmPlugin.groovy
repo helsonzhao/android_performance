@@ -1,15 +1,29 @@
 package com.example.test
 
-import com.android.build.gradle.AppExtension
+import com.android.build.api.instrumentation.FramesComputationMode
+import com.android.build.api.instrumentation.InstrumentationScope
+import com.android.build.api.variant.AndroidComponentsExtension
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 
+/**
+ * Chapter 3.3.1 & Chapter 7.6.2: Modern AGP 8+ Bytecode Instrumentation Plugin
+ * using AndroidComponentsExtension and AsmClassVisitorFactory.
+ */
 class MyAsmPlugin implements Plugin<Project> {
     @Override
     void apply(Project project) {
-        // 获取AppExtension对象
-        AppExtension appExtension = project.getExtensions().getByType(AppExtension.class);
-        // 注册自定义的Transform脚本
-        appExtension.registerTransform(new MyAsmTransform());
+        AndroidComponentsExtension androidComponents =
+                project.extensions.getByType(AndroidComponentsExtension.class)
+
+        androidComponents.onVariants(androidComponents.selector().all()) { variant ->
+            variant.instrumentation.transformClassesWith(
+                    MyAsmTransform.class,
+                    InstrumentationScope.ALL
+            ) {}
+            variant.instrumentation.setAsmFramesComputationMode(
+                    FramesComputationMode.COMPUTE_FRAMES_FOR_INSTRUMENTED_METHODS
+            )
+        }
     }
 }

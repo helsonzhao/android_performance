@@ -12,16 +12,38 @@
         android:orientation="vertical">
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/java_leak"
-            android:layout_width="150dp"
+            android:layout_width="240dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:gravity="center"
-            android:text="Java内存泄漏"/>
+            android:text="3.1 Java Memory Leak"/>
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/native_leak"
-            android:layout_width="150dp"
+            android:layout_width="240dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="Native内存泄漏"/>
+            android:gravity="center"
+            android:text="3.2 Native Memory Leak"/>
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/bitmap_governance"
+            android:layout_width="240dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:text="3.3 Bitmap Governance"/>
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/shrink_thread_stack"
+            android:layout_width="240dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:text="3.4 Shrink Thread Stack"/>
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/release_webview_reserve"
+            android:layout_width="240dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:text="3.5 Free WebView VM"/>
     </androidx.appcompat.widget.LinearLayoutCompat>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
