@@ -1,9 +1,17 @@
 package com.example.performance_optimize.apksize;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.AssetManager;
 import android.content.res.Resources;
 import android.util.Log;
+
+import com.google.android.play.core.splitcompat.SplitCompat;
+import com.google.android.play.core.splitinstall.SplitInstallManager;
+import com.google.android.play.core.splitinstall.SplitInstallManagerFactory;
+import com.google.android.play.core.splitinstall.SplitInstallRequest;
+import com.google.android.play.core.splitinstall.model.SplitInstallSessionStatus;
 
 import java.io.File;
 import java.lang.reflect.Field;
@@ -20,7 +28,7 @@ import dalvik.system.DexClassLoader;
 
 /**
  * Chapter 9: Practical Optimization of Package Size — Dynamic Resource, Class, and Native
- * Library Loading + APK Duplicate Entry Scanner.
+ * Library Loading + Official Play Feature Delivery (SplitCompat) + APK Duplicate Entry Scanner.
  */
 public final class DynamicPluginManager {
     private static final String TAG = "DynamicPluginManager";
@@ -61,9 +69,10 @@ public final class DynamicPluginManager {
      * Chapter 9.6.2: Dynamically constructs a Resources instance backed by an external
      * resource pack (.apk / .skin) via AssetManager.addAssetPath().
      */
+    @SuppressWarnings("deprecation")
     public static Resources loadExternalResources(Context context, String externalResPath) {
         try {
-            AssetManager assetManager = AssetManager.class.newInstance();
+            AssetManager assetManager = AssetManager.class.getDeclaredConstructor().newInstance();
             Method addAssetPath = AssetManager.class.getDeclaredMethod("addAssetPath", String.class);
             addAssetPath.setAccessible(true);
             addAssetPath.invoke(assetManager, externalResPath);
@@ -78,9 +87,15 @@ public final class DynamicPluginManager {
 
     /**
      * Chapter 9.7.2: Dynamically loads a class from an external DEX/JAR/APK file using DexClassLoader.
+     * Enforces Android 14 (API 34+) File.setReadOnly() requirement prior to loading.
      */
     public static Class<?> loadExternalClass(Context context, String dexFilePath, String className) {
         try {
+            File dexFile = new File(dexFilePath);
+            // Android 14 (API 34+) security enforcement: dynamically loaded DEX files must be read-only
+            if (dexFile.exists()) {
+                dexFile.setReadOnly();
+            }
             File optimizedDir = context.getCodeCacheDir();
             DexClassLoader loader = new DexClassLoader(
                     dexFilePath,
@@ -116,6 +131,54 @@ public final class DynamicPluginManager {
             Log.e(TAG, "Failed to inject nativeLibraryDir", e);
         }
         return false;
+    }
+
+    /**
+     * Chapter 9.10: Official Google Play Feature Delivery (Dynamic Feature Module) on-demand download
+     * and SplitCompat installation.
+     */
+    public static void requestDynamicFeatureModule(
+            final Activity activity,
+            final String moduleName,
+            final String targetActivityClassName) {
+        // Ensure SplitCompat is active for the current Context
+        SplitCompat.installActivity(activity);
+
+        SplitInstallManager splitInstallManager = SplitInstallManagerFactory.create(activity);
+        if (splitInstallManager.getInstalledModules().contains(moduleName)) {
+            Log.i(TAG, "Dynamic feature module already installed: " + moduleName);
+            launchSplitActivity(activity, targetActivityClassName);
+            return;
+        }
+
+        SplitInstallRequest request = SplitInstallRequest.newBuilder()
+                .addModule(moduleName)
+                .build();
+
+        splitInstallManager.registerListener(state -> {
+            if (state.status() == SplitInstallSessionStatus.INSTALLED) {
+                // Emulate split installation immediately using SplitCompat
+                SplitCompat.installActivity(activity);
+                Log.i(TAG, "Dynamic feature module installed via Play Feature Delivery: " + moduleName);
+                launchSplitActivity(activity, targetActivityClassName);
+            }
+        });
+
+        splitInstallManager.startInstall(request)
+                .addOnFailureListener(e -> Log.e(TAG, "Play Feature Delivery install failed for " + moduleName, e));
+    }
+
+    private static void launchSplitActivity(Activity activity, String targetActivityClassName) {
+        if (targetActivityClassName == null || targetActivityClassName.isEmpty()) {
+            return;
+        }
+        try {
+            Intent intent = new Intent();
+            intent.setClassName(activity.getPackageName(), targetActivityClassName);
+            activity.startActivity(intent);
+        } catch (Exception e) {
+            Log.e(TAG, "Failed to launch split Activity " + targetActivityClassName, e);
+        }
     }
 
     private static Field findField(Class<?> clazz, String name) throws NoSuchFieldException {

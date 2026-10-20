@@ -38,8 +38,16 @@ static void saveStackByFp(void *secret) {
     ucontext_t *uc = static_cast<ucontext_t *>(secret);
     int i = 0;
     Dl_info dl_info;
-    const void **frame_pointer = reinterpret_cast<const void **>(uc->uc_mcontext.arm_fp);
+#if defined(__aarch64__)
+    const void *const *frame_pointer = reinterpret_cast<const void *const *>(uc->uc_mcontext.regs[29]);
+    const void *return_address = reinterpret_cast<const void *>(uc->uc_mcontext.pc);
+#elif defined(__arm__)
+    const void *const *frame_pointer = reinterpret_cast<const void *const *>(uc->uc_mcontext.arm_fp);
     const void *return_address = reinterpret_cast<const void *>(uc->uc_mcontext.arm_pc);
+#else
+    const void *const *frame_pointer = nullptr;
+    const void *return_address = nullptr;
+#endif
     printf("\nStack trace:");
     while (return_address) {
         memset(&dl_info, 0, sizeof(Dl_info));
@@ -55,9 +63,17 @@ static void saveStackByFp(void *secret) {
         if (!frame_pointer) {
             break;
         }
-        // Read caller return address (LR) and previous frame pointer (FP)
+#if defined(__aarch64__)
+        // On AArch64, FP (x29) points to {prev_fp, lr}
+        return_address = frame_pointer[1];
+        frame_pointer = reinterpret_cast<const void *const *>(frame_pointer[0]);
+#elif defined(__arm__)
+        // On ARM32, FP points to saved LR at [-1] and previous FP at [-2]
         return_address = frame_pointer[-1];
-        frame_pointer = reinterpret_cast<const void **>(frame_pointer[-2]);
+        frame_pointer = reinterpret_cast<const void *const *>(frame_pointer[-2]);
+#else
+        break;
+#endif
     }
     printf("Stack trace end.");
 }

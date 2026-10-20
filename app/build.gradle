@@ -1,16 +1,20 @@
 apply plugin: 'com.android.application'
-//apply plugin: 'MyAsmPlugin'
+apply plugin: 'MyAsmPlugin'
+apply plugin: 'android.aop'
+
 android {
-    compileSdk 33
+    namespace "com.example.performance_optimize"
+    compileSdk 34
+    ndkVersion "27.1.12297006"
 
     defaultConfig {
         applicationId "com.example.performance_optimize"
-        minSdk 21
-        targetSdk 33
+        minSdk 24
+        targetSdk 34
         versionCode 1
         versionName "1.0"
         ndk {
-            abiFilters 'armeabi-v7a'
+            abiFilters 'arm64-v8a', 'armeabi-v7a'
         }
     }
 
@@ -29,29 +33,31 @@ android {
         }
     }
 
-    externalNativeBuild{
+    externalNativeBuild {
         cmake {
             path file('src/main/cpp/CMakeLists.txt')
         }
     }
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
     }
 
-    android.applicationVariants.all {
-        variant ->
-            variant.outputs.all {
-                outputFileName = "PerformanceOptimizeDemo.apk"
-            }
+    androidAopConfig {
+        enabled true
+        include 'com.example.performance_optimize'
     }
-
 }
 
 dependencies {
-    implementation 'com.google.android.material:material:1.4.0'
+    implementation 'com.google.android.material:material:1.11.0'
+    implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'com.bytedance:bytehook:1.0.10'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+    implementation 'com.google.android.play:feature-delivery:2.1.0'
+    implementation 'androidx.profileinstaller:profileinstaller:1.3.1'
+    implementation 'io.github.flyjingfish:androidaop-core:2.7.6'
+    annotationProcessor 'io.github.flyjingfish:androidaop-apt:2.7.6'
     debugImplementation 'com.squareup.leakcanary:leakcanary-android:3.0-alpha-1'
 }

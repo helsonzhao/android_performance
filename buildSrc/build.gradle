@@ -2,16 +2,14 @@ apply plugin: 'groovy'
 
 repositories {
     google()
-    jcenter()
     mavenCentral()
 }
 
 dependencies {
-    implementation 'com.android.tools.build:gradle:4.1.1'
+    implementation 'com.android.tools.build:gradle:8.2.2'
     implementation gradleApi()
     implementation localGroovy()
-    // asm依赖
-    implementation 'org.ow2.asm:asm:7.1'
-    implementation 'org.ow2.asm:asm-util:7.1'
-    implementation 'org.ow2.asm:asm-commons:7.1'
+    implementation 'org.ow2.asm:asm:9.6'
+    implementation 'org.ow2.asm:asm-util:9.6'
+    implementation 'org.ow2.asm:asm-commons:9.6'
 }

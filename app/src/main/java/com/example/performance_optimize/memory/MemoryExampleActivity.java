@@ -40,9 +40,11 @@ public class MemoryExampleActivity extends FragmentActivity {
                 v -> startActivity(new Intent(MemoryExampleActivity.this, NativeLeakActivity.class)));
 
         findViewById(R.id.bitmap_governance).setOnClickListener(v -> {
+            Bitmap testCreated = Bitmap.createBitmap(128, 128, Bitmap.Config.ARGB_8888);
             Bitmap sampled = BitmapGovernanceHelper.decodeSampledBitmapFromResource(
                     getResources(), R.mipmap.ic_launcher, 48, 48);
-            int bytes = sampled != null ? sampled.getAllocationByteCount() : 0;
+            int bytes = (sampled != null ? sampled.getAllocationByteCount() : 0)
+                    + (testCreated != null ? testCreated.getAllocationByteCount() : 0);
             Log.i(TAG, "Decoded downsampled RGB_565 Bitmap: " + bytes + " bytes");
             Toast.makeText(this, "Downsampled Bitmap allocated: " + bytes + " bytes", Toast.LENGTH_SHORT).show();
         });
